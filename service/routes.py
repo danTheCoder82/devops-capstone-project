@@ -61,8 +61,21 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-# ... place you code here to LIST accounts ...
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    """
+    Lists Accounts
+    This endpoint will list all the Accounts in the system
+    """
+    app.logger.info("Request to list all accounts")
 
+    accounts = Account.all()
+    serialized_accounts = [
+        account.serialize()
+        for account in accounts
+    ]
+
+    return jsonify(serialized_accounts), status.HTTP_200_OK
 
 ######################################################################
 # READ AN ACCOUNT
@@ -82,9 +95,6 @@ def read_account(account_id):
         abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] not found")
     
     return account.serialize(), status.HTTP_200_OK
-    
-
-
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
