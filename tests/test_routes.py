@@ -166,4 +166,30 @@ class TestAccountService(TestCase):
         for actual_account, expected_account in zip(actual_accounts, expected_accounts):
             self.assertEqual(actual_account['name'], expected_account.name)
 
+    def test_update_account(self):
+        """It should update and replace an existing account"""
+        account = self._create_accounts(1)[0]
         
+        payload = account.serialize()
+        payload['name'] = "My Account Name"
+
+        response = self.client.put(
+            f"{BASE_URL}/{account.id}",
+            json=payload,
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), payload)
+    
+    def test_update_account_not_found(self):
+        """It should return a 404 error if trying to update a non-existing account"""
+        account = AccountFactory()
+
+        response = self.client.put(
+            f"{BASE_URL}/0",
+            json=account.serialize(),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
