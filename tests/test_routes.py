@@ -122,7 +122,7 @@ class TestAccountService(TestCase):
             content_type="test/html"
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-    
+
     def test_method_not_supported(self):
         """It should return an HTTP 405 error if invalid method is used"""
         account = AccountFactory()
@@ -151,7 +151,7 @@ class TestAccountService(TestCase):
         response = self.client.get(f"{BASE_URL}/0")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_list_accounts(self):
         """It should list all existing accounts"""
         expected_accounts = self._create_accounts(10)
@@ -169,7 +169,7 @@ class TestAccountService(TestCase):
     def test_update_account(self):
         """It should update and replace an existing account"""
         account = self._create_accounts(1)[0]
-        
+
         payload = account.serialize()
         payload['name'] = "My Account Name"
 
@@ -181,7 +181,7 @@ class TestAccountService(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.get_json(), payload)
-    
+
     def test_update_account_not_found(self):
         """It should return a 404 error if trying to update a non-existing account"""
         account = AccountFactory()
@@ -193,11 +193,11 @@ class TestAccountService(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_delete_account(self):
         """It should delete an account if it exists and return a 204 status code"""
         account = self._create_accounts(1)[0]
-        
+
         response = self.client.delete(f"{BASE_URL}/{account.id}")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
